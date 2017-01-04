@@ -33,11 +33,11 @@ class Component (object):
     def _handle_ConnectionUp (self, event):
         print "Component odebral nowe polaczenie"
 
-        # eth0      - 0
-        # eth1      - 1
-        # eth2      - 2
-        # eth3 (h1) - 3
-        # eth4 (h2) - 4
+        # eth0  -   0 (controller)
+        # eth1  -   1 (NAT)
+        # eth2  -   2 (NAT)
+        # eth3  -   3 (h1)
+        # eth4  -   4 (h2)
 
         #Wymiana informacji pomiedzy kontrolerem a snifferem
         self.flowFromPortToPort(3, [1])

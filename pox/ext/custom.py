@@ -1,5 +1,8 @@
+from threading import Thread
+
 import pox.openflow.libopenflow_01 as of
 from pox.core import core
+from flask import Flask, jsonify
 
 log = core.getLogger()
 
@@ -76,35 +79,46 @@ class Component (object):
         print "Przeplyw: {0}:{1} \t -> \t {2}:{3} \t priorytet: {4}"\
             .format(fromPort, tpSrc, toPorts, tpDst, priority)
 
+    def blockIp(self, ip):
+        msg = of.ofp_flow_mod()
+        msg.priority = 4
+        msg.match.dl_type = 0x800
+        msg.match.nw_dst = of.IPAddr(ip)
+        msg.actions.append(of.ofp_action_output(port = of.OFPP_NONE))
+        # msg.actions.append(of.ofp_action_output(port = of.OFPP_FLOOD))
+        self.connection.send(msg)
+        print "Ip %s blocked" % ip
+
     def setTcpMatch(self, msg):
         msg.match.dl_type = 0x800
         msg.match.nw_proto = 6
 
 
 def launch():
+    components = []
+
+    print "Stworzono serwer"
+    app = Flask("app")
 
     def start_c(event):
         print "Nowe polaczenie!"
         component = Component(event.connection)
+        # component.blockIp("213.180.141.140")
+        components.append(component)
 
-        # flowFromPortToPort(event, 2, 3)
-        # flowFromPortToPort(event, 3, 2)
-        #
-        # fr = 2
-        # to = 3
-        # cp = 4
-        #
-        # msg = of.ofp_flow_mod()
-        # # msg.match.in_port = fr
-        # msg.match.tp_dst = 8088
-        # msg.priority = 2
-        # msg.actions.append(of.ofp_action_output(port=to))
-        # msg.actions.append(of.ofp_action_output(port=cp))
-        # event.connection.send(msg)
 
-        # msg.actions.append(of.ofp_action_output(port = 2))
-        # msg.actions.append(of.ofp_action_output(port = 3))
-        # msg.actions.append(of.ofp_action_output(port = of.OFPP_FLOOD))
+    def startServer():
+        print "Uruchamianie serwera"
+        app.run(host='0.0.0.0')
+
+    @app.route("/<block>")
+    def request(block):
+        for component in components:
+            component.blockIp(block)
+        print "Zablokowano ip %s" % block
+        return "OK"
 
     core.openflow.addListenerByName("ConnectionUp", start_c)
 
+    thread = Thread(target=startServer)
+    thread.start()

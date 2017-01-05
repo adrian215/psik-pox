@@ -42,14 +42,11 @@ class Component (object):
         # eth3  -   3 (h1)
         # eth4  -   4 (h2)
 
-        #Wymiana informacji pomiedzy kontrolerem a snifferem
-        self.flowFromPortToPort(3, [1])
-
         #Domyslnie wszystkie polaczenia ida bez zmian
         self.flowFromPortToPort(1, [3])
         self.flowFromPortToPort(3, [1])
 
-        #Dla hosta h2
+        #Ruch pomiedzy snifferem a controllerem
         self.flowFromPortToPort(2, [4])
         self.flowFromPortToPort(4, [2])
 
@@ -57,7 +54,6 @@ class Component (object):
         self.flowFromPortToPort(1, [3, 4], priority=2, tpSrc=80)
         self.flowFromPortToPort(3, [1, 4], priority=2, tpDst=80)
 
-        #Ruch pomiedzy hostem a controllerem
 
 
     def flowFromPortToPort(self, fromPort, toPorts, priority = 1,

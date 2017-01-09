@@ -46,7 +46,7 @@ class Component (object):
         self.flowFromPortToPort(1, [3])
         self.flowFromPortToPort(3, [1])
 
-        #Ruch pomiedzy snifferem a controllerem
+        #Ruch pomiedzy snifferem2 a controllerem
         self.flowFromPortToPort(2, [4])
         self.flowFromPortToPort(4, [2])
 
@@ -79,9 +79,8 @@ class Component (object):
         msg = of.ofp_flow_mod()
         msg.priority = 4
         msg.match.dl_type = 0x800
-        msg.match.nw_dst = of.IPAddr(ip)
+        msg.match.nw_src = of.IPAddr(ip)
         msg.actions.append(of.ofp_action_output(port = of.OFPP_NONE))
-        # msg.actions.append(of.ofp_action_output(port = of.OFPP_FLOOD))
         self.connection.send(msg)
         print "Ip %s blocked" % ip
 
@@ -117,4 +116,5 @@ def launch():
     core.openflow.addListenerByName("ConnectionUp", start_c)
 
     thread = Thread(target=startServer)
+    thread.daemon = True
     thread.start()

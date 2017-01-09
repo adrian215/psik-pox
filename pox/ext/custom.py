@@ -82,6 +82,14 @@ class Component (object):
         msg.match.nw_src = of.IPAddr(ip)
         msg.actions.append(of.ofp_action_output(port = of.OFPP_NONE))
         self.connection.send(msg)
+
+        msg = of.ofp_flow_mod()
+        msg.priority = 4
+        msg.match.dl_type = 0x800
+        msg.match.nw_dst = of.IPAddr(ip)
+        msg.actions.append(of.ofp_action_output(port = of.OFPP_NONE))
+        self.connection.send(msg)
+
         print "Ip %s blocked" % ip
 
     def setTcpMatch(self, msg):

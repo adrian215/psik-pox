@@ -13,25 +13,6 @@ class Component (object):
         connection.addListeners(self)
         print "Utworzono nowy komponent dla polaczenia: %s" % connection
 
-#     def _handle_PacketIn (self, event):
-#         print "Odebrano %s" % event.ofp
-#         packet = event.parsed
-#         # packet = event.parsed.find("tcp")
-#         # if packet != None:
-#         #     self.handleTcpPacket(packet)
-# # msg.actions.append(of.ofp_action_output(port = 3))
-#         # msg = of.ofp_packet_out()
-#         # msg.buffer_id = event.ofp.buffer_id# msg.actions.append(of.ofp_action_output(port = 3))
-#         # msg.data = event
-#         # # action = of.ofp_action_output(port = of.OFPP_FLOOD)# msg.actions.append(of.ofp_action_output(port = 3))
-#         # # msg.actions.append(action)
-#         print "Adres docelowy: %s" % event.nw_dst
-#         msg = of.ofp_flow_mod()
-#         msg.match = of.ofp_match.from_packet(packet)
-#         msg.actions.append(of.ofp_action_output(port = of.OFPP_FLOOD))
-#         print "dodano przeplyw"
-#
-#         self.connection.send(msg)
 
     def _handle_ConnectionUp (self, event):
         print "Component odebral nowe polaczenie"
